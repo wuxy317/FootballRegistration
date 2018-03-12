@@ -1,0 +1,177 @@
+<import src="../../wxParse/wxParse.wxml" />
+<import src="../../templates/header.wxml" />
+<import src="../../templates/copyright.wxml" />
+
+<view class="container">
+	<view class="banner">
+		<image class="" src="/image/zuqiu.png" mode="aspectFill">></image>
+	</view>
+	<view class="block-area">
+		<view class="title">{{detail.title.rendered}}</view>
+		<view class="block-info clearfix">
+			<view class="block-info-left">
+				<text class="color-1 vm">{{signupCount}}</text>
+				<text class="vm">人报名</text>
+			</view>
+			<view class="block-info-right">
+				<text class="color-1 vm bold">￥{{detail.post_meta.money}}</text>
+				<text class="vm">元</text>
+			</view>
+		</view>
+	</view>
+	<view class="section">
+		<view class="menu-item">
+            <image class="menu-icon" src="/image/time.png"></image>
+            <view class="menu-text">
+            	<text>{{detail.post_meta.startDate}} {{detail.post_meta.startTime}}</text>
+            </view>
+        </view>
+		<view class="menu-item">
+            <image class="menu-icon" src="/image/tel.png"></image>
+            <view class="menu-text" bindtap="tel" data-tel="{{tel}}">
+            	<text data-tel="{{tel}}">{{detail.post_meta.tel}}</text>
+            </view>
+        </view>
+		<view class="menu-item">
+            <image class="menu-icon" src="/image/address.png"></image>
+            <view class="menu-text">
+            	<text  bindtap="openLocation">{{detail.post_meta.address}}</text>
+            </view>
+         </view>
+	</view>
+	<view class="section">
+		<view class="section-title">报名详情</view>
+		<view class="m-t-10 text">
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+		</view>
+	</view>
+  <view class="section">
+		<view class="section-title">
+      报名记录
+    </view>
+    <!--<view class="list-box clearfix" wx:for="{{postsList}}">-->
+      <view class="m-t-10 text">
+        <block wx:key="id" wx:for="{{readLogs}}">
+          <view class="signUp-item">
+              <text class="log-text">No.{{index + 1}}. </text>
+              <image class="list-avatar" src="{{item[1]}}"></image>
+              <text class="log-text">{{item[0]}}</text>
+            </view>
+        </block>
+      </view>
+    <!--</view>-->
+	</view>
+  <view class="section">
+      <view class="section-title">报名讨论</view>
+      <view class="m-t-10 text">
+         <!--评论区-->
+        <view class="menuBackground" catchtap="hiddenMenubox" style="display:{{menuBackgroup ? 'block' : 'none'}}"></view>
+        <view style="display:{{display}}">
+            <view class="comment-fixed">
+                <form catchsubmit="formSubmit" report-submit="true">
+                    <view class="comment-respond">
+                        <input class="comment-input" maxlength="200" name="inputPostID" value="{{detail.id}}" style="display:none" />
+                        <view class="comment-box">
+                            <input class="comment-input" type='text' confirm-type="send" cursor-spacing="10" maxlength="100" name="inputComment" value="{{content}}" placeholder="{{placeholder}}" focus="{{focus}}" bindblur="onReplyBlur" bindfocus="onRepleyFocus" />
+                            <button class="comment-button touch-active" formType="submit">发送</button>
+                        </view>
+                    </view>
+                </form>
+            </view>
+        </view>
+        <!--评论区-->
+         <view style="display:{{display}}">
+            <view class="relatedTitle">
+                评论交流
+            </view>
+            <view class="entry-gap-like"></view>
+            <view class="commentheader">
+                {{commentCount}}
+            </view>
+            <block wx:key="id" wx:for="{{commentsList}}">
+                <view wx:if="{{item.parent ==0}}">
+                    <view class="comment">
+                        <view class="comment-user">
+                            <image src="{{item.author_url}}" class="gravatarImg"></image>
+                            <view style='display:flex;flex-direction: row; justify-content: space-between;width: 100%'>
+                                <view style='font-weight:bold;' bindtap="replay" data-id="{{item.id}}" data-name="{{item.author_name}}" data-userid="{{item.userid}}" data-formId="{{item.formId}}" data-commentdate="{{item.dateStr}}">{{item.author_name}}</view>
+                                <view bindtap="replay" data-id="{{item.id}}" data-name="{{item.author_name}}" data-userid="{{item.userid}}" data-formId="{{item.formId}}" data-commentdate="{{item.dateStr}}">{{item.date}}</view>
+                            </view>
+                        </view>
+                        <view class="comment-summary" bindtap="replay" data-id="{{item.id}}" data-name="{{item.author_name}}" data-userid="{{item.userid}}" data-formId="{{item.formId}}" data-commentdate="{{item.dateStr}}"> {{item.summary}}</view>
+                        <!-- 一级回复-->
+                        <view wx:for="{{commentsList}}" wx:key="itemid1" wx:for-index="idx" wx:for-item="item1">
+                            <view wx:if="{{item1.parent===item.id}}">
+                                <view class="replay-user" bindtap="replay" data-id="{{item1.id}}" data-name="{{item1.author_name}}" data-userid="{{item1.userid}}" data-formId="{{item1.formId}}" data-commentdate="{{item1.dateStr}}">
+                                    {{item1.author_name}} 回复{{item1.parent_name}}:{{item1.summary}}
+                                </view>
+
+
+                                <!-- 二级回复-->
+                                <view wx:for="{{commentsList}}" wx:key="itemid2" wx:for-index="idx" wx:for-item="item2">
+                                    <view wx:if="{{item2.parent===item1.id}}">
+                                        <view class="replay-user" bindtap="replay" data-id="{{item2.id}}" data-name="{{item2.author_name}}" data-userid="{{item2.userid}}" data-formId="{{item2.formId}}" data-commentdate="{{item2.dateStr}}">
+                                            {{item2.author_name}} 回复 {{item2.parent_name}}:{{item2.summary}}
+                                        </view>
+
+                                        <!-- 三级回复-->
+                                        <view wx:for="{{commentsList}}" wx:key="itemid3" wx:for-index="idx" wx:for-item="item3">
+                                            <view wx:if="{{item3.parent===item2.id}}">
+                                                <view class="replay-user" bindtap="replay" data-id="{{item3.id}}" data-name="{{item3.author_name}}" data-userid="{{item3.userid}}" data-formId="{{item3.formId}}" data-commentdate="{{item3.dateStr}}">
+                                                    {{item3.author_name}} 回复 {{item3.parent_name}}:{{item3.summary}}
+                                                </view>
+
+                                                <!-- 四级回复-->
+                                                <view wx:for="{{commentsList}}" wx:key="itemid4" wx:for-index="idx" wx:for-item="item4">
+                                                    <view wx:if="{{item4.parent===item3.id}}">
+                                                        <view class="replay-user">
+                                                            {{item4.author_name}} 回复 {{item4.parent_name}}:{{item4.summary}}
+                                                        </view>
+                                                    </view>
+                                                </view>
+                                                <!-- 四级回复-->
+
+                                            </view>
+                                        </view>
+                                        <!-- 三级回复-->
+
+                                    </view>
+                                </view>
+                                <!-- 二级回复-->
+
+                            </view>
+                        </view>
+                        <!-- 一级回复-->
+
+                    </view>
+                </view>
+
+            </block>
+
+            <view style="display:{{display}}">
+
+                <view class="more-comment" bindtap="loadMore" hidden="{{isLastPage}}">
+                    点击加载更多评论...
+                </view>
+
+                <view hidden="{{!isNoComment}}">
+                    <view class="no-more" hidden="{{!isLastPage}}">---无更多评论---</view>
+                </view>
+            </view>
+            <modal title="{{dialog.title}}" hidden="{{dialog.hidden}}" no-cancel bindconfirm="confirm">{{dialog.content}}</modal>
+        </view>
+
+        <view class="ditail-copyright" style="display:{{display}}">
+            <template is="tempCopyright" />
+        </view>
+      </view>
+    </view>
+	<view class="section">
+    <block wx:if="{{isSignUp}}">
+      <button type="primary" bindtap="unJoin">取消报名</button>
+    </block>
+    <block wx:else>
+      <button type="primary" bindtap="join">我要报名</button>
+    </block>
+	</view>
+</view>

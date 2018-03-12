@@ -1,0 +1,95 @@
+<view class="container bg">
+  <form bindsubmit="formSubmit" bindreset="formReset">
+      <!-- 置顶图片-->
+      <view>
+          <image class="jc-img" src="{{imageUrl}}"></image>
+      </view>
+      <view class="section">
+          <view class="menu">
+              <!-- 标题-->
+              <view class="menu-item">
+                  <image class="menu-icon" src="/image/theme.png"></image>
+                  <view class="menu-text">
+                      <input bindinput="bindTitle" class="section-input input" type="text" 
+                          value="" placeholder="活动主题" value="{{theme}}" autofocus name="theme">
+                      </input>
+                  </view>
+              </view>
+              <!--日期-->
+              <view class="menu-item">
+                  <picker mode="date" value="{{startDate}}" start="" end="" bindchange="bindStartDateChange">
+                      <view class="picker">
+                          <image class="menu-icon" src="/image/time.png"></image>
+                          <view class="menu-text">
+                              <text class="vm">日期：</text><text class="vm m-l-10" >{{startDate}}</text>
+                              <view class="hide">
+                                  <input value="{{startDate}}" disabled="true" name="startDate"></input>
+                              </view>    
+                          </view>                
+                      </view>
+                  </picker>
+              </view>
+              <!--时间-->
+              <view class="menu-item">
+                  <picker mode="time" value="{{startTime}}" start="" end="" bindchange="bindStartTimeChange">
+                      <view class="picker">
+                          <image class="menu-icon" src="/image/time.png"></image>
+                          <view class="menu-text">
+                              <text class="vm">时间：</text><text class="vm m-l-10">{{startTime}}</text>
+                              <view class="hide">
+                                  <input value="{{startTime}}" disabled="true" name="startTime"></input>
+                              </view>     
+                          </view>                
+                      </view>
+                  </picker>
+              </view>
+              <!--活动地址-->
+              <view class="menu-item">
+                  <image class="menu-icon" src="/image/address.png"></image>
+                  <view class="menu-text">
+                      <input bindtap="chooseLocation" class="section-input input" 
+                          type="text" value="" placeholder="活动地址" 
+                          value="{{address}}">
+                      </input>
+                  </view>
+              </view>
+              <!--活动费用-->
+              <view class="menu-item">
+                  <image class="menu-icon" src="/image/money.png"></image>
+                  <view class="menu-text">
+                      <input bindinput="bindMoney" type="number" value="{{money}}" 
+                          name="money" placeholder="费用">
+                      </input>
+                  </view>
+              </view>
+              <!--联系电话-->
+              <view class="menu-item">
+                  <image class="menu-icon" src="/image/tel.png"></image>
+                  <view class="menu-text">
+                      <input  bindinput="bindTel" type="number" class="menu-text" 
+                          name="tel" value="" placeholder="联系电话" maxlength="11">
+                      </input>
+                  </view>
+              </view>
+          </view>
+      </view>
+      <!--活动描述-->
+      <view class="section">
+          <view class="menu">
+              <view class="menu-item">
+                  <image class="menu-icon" src="/image/text.png"></image>
+                  <view class="menu-text">
+                      <text class="vm">活动描述</text>
+                  </view>
+                  <view class="m-t-5">
+                      <textarea bindinput="bindContent" value="{{content}}" placeholder="说些什么吧"></textarea>
+                  </view>
+              </view>            
+          </view>
+      </view>
+      <!--提交-->
+      <view class="section">
+          <button class="" type="primary" form-type="submit">提交</button>
+      </view>
+  </form>
+</view>
